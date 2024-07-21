@@ -17,3 +17,8 @@ The information include :
 ### Use
 Node.js, express.js, chat.js, Nodemail, echart, testing apache web server,
 
+### view
+![image](https://github.com/pangunit99/SIEM_final_year_project/blob/main/image7.png)
+
+### work flow
+![image](https://github.com/pangunit99/SIEM_final_year_project/blob/main/image12.png)
