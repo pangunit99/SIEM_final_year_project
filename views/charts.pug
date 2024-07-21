@@ -1,0 +1,225 @@
+extends layout
+
+
+block content
+      div.container
+        div.left.card
+          span.pxx
+            h3 View 
+            h1 #{view}
+          span.pos_fix
+            i.bx.bx-user(style='font-size:40px')
+
+        div.middle.card
+          span.pxx
+            h3 SQL injection detected
+            h1(id='injnum').red  sqlin is:
+            script.
+              setInterval(function () {
+                fetch('http://localhost:3000/chart/sendemail', {
+                  method: 'get',headers: {
+                      'Accept': 'application/json',
+                  },
+                }).then(function(response) {
+                  // UPDATE WEATHER HERE
+                  response.json().then(data=>{document.getElementById('injnum').innerHTML = data.result})
+                    
+                  
+                }).catch(function(err) {
+                  // Error :(
+                });
+              }, 1000)
+          span.pos_fix
+            i.bx.bxs-error(style='font-size:40px')
+
+        div.right.card
+          h3 ERROR
+          h1 #{err}
+
+
+      div
+        div
+        script(src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js")
+        .container
+        div#secmain.card(style="width: 90%;height:500px;margin:0 auto;")
+          script(type='text/javascript').
+            var chartDom = document.getElementById('secmain');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+              tooltip: {
+                trigger: 'item'
+              },
+              legend: {
+                top: '5%',
+                left: 'center',
+                // doesn't perfectly work with our tricks, disable it
+                selectedMode: false
+              },
+              series: [
+                {
+                  name: 'Access Log',
+                  type: 'pie',
+                  radius: ['40%', '70%'],
+                  center: ['50%', '70%'],
+                  // adjust the start angle
+                  startAngle: 180,
+                  label: {
+                    show: true,
+                    formatter(param) {
+                      // correct the percentage
+                      return param.name + ' (' + param.percent * 2 + '%)';
+                    }
+                  },
+                  data: [
+                    {value:#{alog1},name:"Access Log"},{value:#{alog2},name:"SQL injection"},{value:#{alog3},name:"ERROR"},
+                    {
+                      // make an record to fill the bottom 50%
+                      value: #{alog1}+#{alog2}+#{alog3},
+                      itemStyle: {
+                        // stop the chart from rendering this piece
+                        color: 'none',
+                        decal: {
+                          symbol: 'none'
+                        }
+                      },
+                      label: {
+                        show: false
+                      }
+                    }
+                  ]
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+
+
+
+        div
+          script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js")
+        div.container
+          .box-info.chart1.card
+                        canvas#chartPic
+                          script.
+                              var ctx = document.getElementById("chartPic").getContext('2d');
+                              ctx.canvas.parentNode.style.width = '50%';
+                              var idata = [#{datai}];
+                              var chart = new Chart(ctx, {
+                                  type: 'pie',
+                                  data: {
+                                      labels: ["ERROR Injection" , "UNION Injection","Timebased Injection","Boolean Based Injection"],
+                                      datasets: [{
+                                          data: idata,
+                                          backgroundColor: ['#ffa600', '#ff0d0d', '#74ff7b', '#ff7300'],
+                                          borderWidth: 1
+                                      }]
+                                  },
+                                  options: {
+                                      title: {
+                                          display: true,
+                                          text: "SQL injection"
+                                      },
+                                      legend: {
+                                          display: true
+                                      }
+                                  }
+                              });
+
+          
+          div.wrip.card(style='width:25%')
+            table
+              thead
+                th Time
+                th Injection type 
+                th Severity 
+              each item in items
+               - var colortype = item.itype
+                if (colortype == "UNION injection")
+                  tr
+                    td #{item.time}
+                    td #{item.itype}
+                    td(class="bkcolor") Critical
+                else if(colortype == "Time based injection")
+                  tr
+                    td #{item.time}
+                    td #{item.itype}
+                    td(class="bkcolor3") Low
+                else if(colortype == "Error injection")
+                  tr
+                    td #{item.time}
+                    td #{item.itype}
+                    td(class="bkcolor2") Medium
+                else if(colortype == "Boolean injection")
+                  tr
+                    td #{item.time}
+                    td #{item.itype}
+                    td(class="bkcolor4") High
+                else
+                  tr
+                    td #{item.time}
+                    td #{item.itype}
+                    td(class="bkcolor") Critical
+
+              
+        
+      div.container
+
+        script(src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js")
+
+        div#main.card(style="width: 50%;height:500px")
+          script(type='text/javascript').
+            var myChart = echarts.init(document.getElementById('main'));
+            option = {
+              title: {
+                text: 'Time of injection'
+              },
+              tooltip: {
+                trigger: 'axis'
+              },
+              legend: {
+                data: ['Normal view', 'injection']
+              },
+              grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+              },
+              toolbox: {
+                feature: {
+                  saveAsImage: {}
+                }
+              },
+              xAxis: {
+                type: 'category',
+                data: [#{date}]
+              },
+              yAxis: {
+                type: 'value'
+              },
+              series: [
+                {
+                  name: 'SQL Injection',
+                  type: 'line',
+                  step: 'start',
+                  data: [#{number}]
+                }
+              ]
+            };
+            option && myChart.setOption(option);
+
+        div.card(style='width:25%')
+            table
+              thead
+                th IP
+                th require times
+              each ip in ips
+                tr
+                  td #{ip.ip}
+                  td #{ip.times}
+
+
+
+        
+

@@ -1,0 +1,21 @@
+extends layout
+
+
+block content
+      div
+        div
+          div.wrip.card(style='width:50%')
+            table(style='width:1200;table-layout:fixed;')
+              thead
+                th(style='width:20px;') Ip
+                th Time 
+                th Resource 
+                th Referer
+                th statusCode
+              each item in unionsqli
+                tr
+                  td #{item.ip}
+                  td #{item.time}
+                  td #{item.resource}
+                  td #{item.referer}
+                  td #{item.statusCode}

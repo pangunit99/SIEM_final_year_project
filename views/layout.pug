@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    title= 'Admin Log'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css', rel='stylesheet')
+  body
+    div(style='background-color:#e5e5e5;padding:15px;text-align:center;')
+      h1 SQL injection Detect for website
+    div(style='overflow:auto;')
+      div
+        ul
+          li
+            a(href='/chart')
+              i.bx.bxs-dashboard
+              span.text Dashboard
+          li.dropdown
+            a.dropbtn(href='javascript:void(0)') Table
+            .dropdown-content
+              a(href='/chart/allinj') All SQL Injection
+              a(href='/chart/errinj') ERROR INJECTION
+              a(href='/chart/booinj') BOOLEAN INJECTION
+              a(href='/chart/timeinj') Timebased INJECTION
+              a(href='/chart/unioninj') UNION INJECTION
+    block content
+    
